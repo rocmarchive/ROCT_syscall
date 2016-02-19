@@ -107,6 +107,7 @@ install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md DESTINATION libhsakmt )
 install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/hsakmt.h DESTINATION libhsakmt/include/libhsakmt )
 install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/hsakmttypes.h DESTINATION libhsakmt/include/libhsakmt )
 install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/linux/kfd_ioctl.h DESTINATION libhsakmt/include/libhsakmt/linux )
+install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/linux/kfd_sc.h DESTINATION libhsakmt/include/libhsakmt/linux )
 install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/${HSAKMT_COMPONENT}-link DESTINATION include RENAME ${HSAKMT_COMPONENT} )
 install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/${HSAKMT_COMPONENT}.so-link DESTINATION lib RENAME ${HSAKMT_COMPONENT}.so )
 

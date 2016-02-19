@@ -331,6 +331,17 @@ hsaKmtSetQueueCUMask(
     );
 
 /**
+  Creates syscall structure buffer
+  (allocates memory and registers with kmt process)
+*/
+HSAKMT_STATUS
+HSAKMTAPI
+hsaKmtGetSyscallArea(
+    HSAuint32* NumberOfSlots,               //OUT
+    void**     MemoryAddress                //OUT (page-aligned)
+    );
+
+/**
   Allows an HSA process to set/change the default and alternate memory coherency, before starting to dispatch. 
 */
 
