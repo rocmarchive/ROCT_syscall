@@ -25,14 +25,57 @@
 
 #include "libhsakmt.h"
 #include "linux/kfd_ioctl.h"
+#include "linux/kfd_sc.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <sys/user.h>
 #include <fcntl.h>
 #include "fmm.h"
+
+HSAKMT_STATUS HSAKMTAPI hsaKmtGetSyscallArea(HSAuint32* NumberOfSlots,                                                       void** MemoryAddress)
+{
+
+	CHECK_KFD_OPEN();
+
+	if (MemoryAddress == NULL || NumberOfSlots == NULL)
+		return HSAKMT_STATUS_INVALID_PARAMETER;
+
+	//TODO: This should be computed from GPU configuration.
+	// Values hardcoded for Carrizo
+	HSAuint32 max_active = 320 * 64;
+	HsaMemFlags flags = { .ui32 = {
+		.PageSize = HSA_PAGE_SIZE_4KB,
+		.HostAccess = 1,
+		.AtomicAccessPartial = 1,
+	}};
+
+	if (max_active < 64)
+		return HSAKMT_STATUS_ERROR;
+
+	const size_t size =
+		((sizeof(struct kfd_sc) * max_active) + PAGE_SIZE - 1) & PAGE_MASK;
+	void *addr = NULL;
+	HSAKMT_STATUS ret = hsaKmtAllocMemory(0, size, flags, &addr);
+	if (ret != HSAKMT_STATUS_SUCCESS)
+		return ret;
+
+	struct kfd_ioctl_set_syscall_area_args args =
+		{ .sc_area_address = (uint64_t)addr,
+		  .sc_elements = max_active };
+	int err = kmtIoctl(kfd_fd, AMDKFD_IOC_SET_SYSCALL_AREA, &args);
+	if (err != 0) {
+		hsaKmtFreeMemory(addr, size);
+		return HSAKMT_STATUS_ERROR;
+	}
+
+	*MemoryAddress = addr;
+	*NumberOfSlots = max_active;
+	return HSAKMT_STATUS_SUCCESS;
+}
 
 HSAKMT_STATUS HSAKMTAPI hsaKmtSetMemoryPolicy(HSAuint32 Node,
 					      HSAuint32 DefaultPolicy,

@@ -418,6 +418,11 @@ struct kfd_ioctl_cross_memory_copy_args {
 	uint64_t bytes_copied;
 };
 
+struct kfd_ioctl_set_syscall_area_args {
+	uint64_t sc_area_address;       /* to KFD */
+	uint32_t sc_elements;           /* to KFD */
+};
+
 #define AMDKFD_IOCTL_BASE 'K'
 #define AMDKFD_IO(nr)			_IO(AMDKFD_IOCTL_BASE, nr)
 #define AMDKFD_IOR(nr, type)		_IOR(AMDKFD_IOCTL_BASE, nr, type)
@@ -524,7 +529,10 @@ struct kfd_ioctl_cross_memory_copy_args {
 #define AMDKFD_IOC_ACQUIRE_VM			\
 		AMDKFD_IOW(0x21, struct kfd_ioctl_acquire_vm_args)
 
+#define AMDKFD_IOC_SET_SYSCALL_AREA             \
+		AMDKFD_IOW(0x22, struct kfd_ioctl_set_syscall_area_args)
+
 #define AMDKFD_COMMAND_START		0x01
-#define AMDKFD_COMMAND_END		0x22
+#define AMDKFD_COMMAND_END		0x23
 
 #endif
