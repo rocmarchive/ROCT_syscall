@@ -57,6 +57,7 @@ hsaKmtQueryPointerInfo;
 hsaKmtSetMemoryUserData;
 hsaKmtGetQueueInfo;
 hsaKmtGetSyscallArea;
+hsaKmtFreeSyscallArea;
 
 local: *;
 };

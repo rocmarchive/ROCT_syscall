@@ -349,6 +349,14 @@ hsaKmtGetSyscallArea(
     );
 
 /**
+  Frees syscall structure buffer
+  (unregisters with kmt process and frees memory)
+*/
+HSAKMT_STATUS
+HSAKMTAPI
+hsaKmtFreeSyscallArea( void );
+
+/**
   Allows an HSA process to set/change the default and alternate memory coherency, before starting to dispatch. 
 */
 
