@@ -77,6 +77,19 @@ HSAKMT_STATUS HSAKMTAPI hsaKmtGetSyscallArea(HSAuint32* NumberOfSlots,          
 	return HSAKMT_STATUS_SUCCESS;
 }
 
+HSAKMT_STATUS HSAKMTAPI hsaKmtFreeSyscallArea(void)
+{
+	CHECK_KFD_OPEN();
+
+	struct kfd_ioctl_free_syscall_area_args args = {0,};
+	int err = kmtIoctl(kfd_fd, AMDKFD_IOC_FREE_SYSCALL_AREA, &args);
+	if (err != 0)
+		return HSAKMT_STATUS_ERROR;
+	const size_t size =
+		((sizeof(struct kfd_sc) * args.sc_elements) + PAGE_SIZE - 1) & PAGE_MASK;
+	return hsaKmtFreeMemory((void*)args.sc_area_address, size);
+}
+
 HSAKMT_STATUS HSAKMTAPI hsaKmtSetMemoryPolicy(HSAuint32 Node,
 					      HSAuint32 DefaultPolicy,
 					      HSAuint32 AlternatePolicy,
