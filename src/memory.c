@@ -36,6 +36,24 @@
 #include <fcntl.h>
 #include "fmm.h"
 
+
+static int hsaGetMaxWorkItems(uint32_t node_id)
+{
+	HsaNodeProperties props;
+	uint32_t gpu_id; // unused
+	struct pci_access pacc; // unused
+	HSAKMT_STATUS ret;
+
+	ret = topology_sysfs_get_node_props(node_id, &props,
+					    &gpu_id, &pacc);
+
+	if (ret != HSAKMT_STATUS_SUCCESS)
+		return -1;
+	// We should use props.WaveFrontSize instead of 64,
+	// but our GPU, and kernel side id computation assumes 64.
+	return props.NumFComputeCores * props.MaxWavesPerSIMD * 64;
+}
+
 HSAKMT_STATUS HSAKMTAPI hsaKmtGetSyscallArea(HSAuint32* NumberOfSlots,                                                       void** MemoryAddress)
 {
 
@@ -44,9 +62,11 @@ HSAKMT_STATUS HSAKMTAPI hsaKmtGetSyscallArea(HSAuint32* NumberOfSlots,          
 	if (MemoryAddress == NULL || NumberOfSlots == NULL)
 		return HSAKMT_STATUS_INVALID_PARAMETER;
 
-	//TODO: This should be computed from GPU configuration.
-	// Values hardcoded for Carrizo
-	HSAuint32 max_active = 320 * 64;
+	//TODO: assumes we run on the first node
+	HSAuint32 max_active = hsaGetMaxWorkItems(0);
+	if (max_active <= 0)
+		return HSAKMT_STATUS_ERROR;
+
 	HsaMemFlags flags = { .ui32 = {
 		.PageSize = HSA_PAGE_SIZE_4KB,
 		.HostAccess = 1,
