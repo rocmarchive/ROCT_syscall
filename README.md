@@ -1,3 +1,7 @@
+### GPU syscalls
+
+This is a modified version of the ROCT thunk library. The modifications add support for GPU invoked system calls. System call support has only been tested on Kaveri and Carrizo APUs
+
 ### Boltzmann Thunk Library
 
 This repository includes the user-mode API interfaces used to interact with the Boltzmann KFD driver. Currently supported agents include only the AMD/ATI Fiji family of discrete GPUs.
