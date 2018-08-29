@@ -59,9 +59,9 @@ set ( BUILD_VERSION_STRING "${BUILD_VERSION_MAJOR}.${BUILD_VERSION_MINOR}.${BUIL
 
 ## Compiler flags
 set ( CMAKE_C_FLAGS "-fPIC -W -Wall -Wextra -Wno-unused-parameter -Wformat-security -Wswitch-default -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wlogical-op -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wunreachable-code -std=gnu99 -fvisibility=hidden" )
-if ( "${CMAKE_C_COMPILER_VERSION}" STRGREATER "4.8.0")
-    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror" )
-endif ()
+#if ( "${CMAKE_C_COMPILER_VERSION}" STRGREATER "4.8.0")
+#    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror" )
+#endif ()
 
 if ( "${CMAKE_BUILD_TYPE}" STREQUAL Release )
     set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2" )
